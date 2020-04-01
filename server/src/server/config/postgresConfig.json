@@ -1,8 +1,8 @@
 {
   "development": {
     "username": "postgres",
-    "password": "admin",
-    "database": "todo-dev",
+    "password": "postgres",
+    "database": "backend",
     "host": "localhost",
     "dialect": "postgres",
     "operatorsAliases": "Op"

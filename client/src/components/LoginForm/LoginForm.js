@@ -23,13 +23,6 @@ class LoginForm extends React.Component{
     const {error, isFetching} = this.props.auth;
     const {handleSubmit, submitting, authClear} = this.props;
 
-    const formInputClasses = {
-      container: styles.inputContainer,
-      input: styles.input,
-      warning: styles.fieldWarning,
-      notValid: styles.notValid,
-      valid: styles.valid,
-    };
 
     return (
       <div className={ styles.loginForm }>
@@ -39,14 +32,12 @@ class LoginForm extends React.Component{
         <form onSubmit={ handleSubmit(this.clicked) }>
           <Field
             name='email'
-            classes={ formInputClasses }
             component={ FormInput }
             type='text'
             label='Email Address'
           />
           <Field
             name='password'
-            classes={ formInputClasses }
             component={ FormInput }
             type='password'
             label='password'
