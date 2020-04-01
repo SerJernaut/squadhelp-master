@@ -17,7 +17,7 @@ const validate = (values) => {
 
 const ChatInput = (props) => {
 
-    const clickButton = (values) => {
+    const clickButtonHandler = (values) => {
         const {reset} = props;
         props.sendMessage({
             messageBody: values.message,
@@ -31,7 +31,7 @@ const ChatInput = (props) => {
     const {handleSubmit, valid} = props;
     return (
         <div className={styles.inputContainer}>
-            <form onSubmit={handleSubmit(clickButton)} className={styles.form}>
+            <form onSubmit={handleSubmit(clickButtonHandler)} className={styles.form}>
                 <Field
                     name='message'
                     component={FormInput}

@@ -26,7 +26,7 @@ const AddToCatalog = (props) => {
         return valueArray;
     };
 
-    const click = (values) => {
+    const clickHandler = (values) => {
         const {addChatId} = props;
         props.addChatToCatalog({chatId: addChatId, catalogId: values.catalogId});
     };
@@ -36,7 +36,7 @@ const AddToCatalog = (props) => {
     const selectArray = getCatalogsNames();
     return (<>
             {selectArray.length !== 0 ?
-                <form onSubmit={handleSubmit(click)} className={styles.form}>
+                <form onSubmit={handleSubmit(clickHandler)} className={styles.form}>
                     <Field
                         name='catalogId'
                         component={SelectInput}
