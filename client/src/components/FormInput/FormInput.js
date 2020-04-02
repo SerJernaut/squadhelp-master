@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import styles from './FormInput.module.sass'
 const FormInput = (props) => {
 
-  const {label, input, type, notValid, valid, inputStyles, container, meta: {touched,visited, error}} = props;
+  const {label, input, type, container, meta: {touched,visited, error}} = props;
 
-  const inputClassName = classNames(inputStyles || styles.input, {
-    [notValid || styles.notValid ]: touched && error,
-    [valid || styles.valid]: visited && !error,
+  const inputClassName = classNames( styles.input, {
+    [styles.notValid ]: touched && error,
+    [styles.valid]: visited && !error,
   });
 
   return (
