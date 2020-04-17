@@ -1,5 +1,7 @@
 const bd = require('../../models/index');
 const ServerError = require('../../errors/ServerError');
+const NotFoundError = require('../../errors/NotFoundError')
+
 
 module.exports.updateContest = async (data, predicate, transaction) => {
   const [updatedCount, [updatedContest]] = await bd.Contests.update(data,
@@ -9,6 +11,14 @@ module.exports.updateContest = async (data, predicate, transaction) => {
   } else {
     return updatedContest.dataValues;
   }
+};
+
+module.exports.getAllOffers = async (filters) => {
+  const offersName = await bd.Offers.findAll(filters);
+  if (offersName) {
+    return offersName;
+  }
+  throw new NotFoundError('Can not find offers');
 };
 
 module.exports.updateContestStatus = async (data, predicate, transaction) => {

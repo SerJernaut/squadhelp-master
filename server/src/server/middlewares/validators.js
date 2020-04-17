@@ -20,6 +20,15 @@ module.exports.validateLogin = async (req, res, next) => {
   }
 };
 
+module.exports.validateOffersFiles = async (req, res, next) => {
+  const validationResult = await schems.offersFilesSchem.isValid(req.body);
+  if (validationResult) {
+    next();
+  } else {
+    return next(new BadRequestError('Invalid data for login'));
+  }
+}
+
 module.exports.validateContestCreation = (req, res, next) => {
   const promiseArray = [];
   req.body.contests.forEach(el => {

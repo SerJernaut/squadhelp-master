@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const db = require('../models/index');
 import ServerError from '../errors/ServerError';
 
@@ -243,7 +245,7 @@ module.exports.getCustomersContests = (req, res, next) => {
 };
 
 module.exports.getContests = (req, res, next) => {
-  const predicates = UtilFunctions.createWhereForAllContests(req.body.typeIndex,
+  const predicates = UtilFunctions.createWhereForAllContests(req.body.selectedContestTypes,
     req.body.contestId, req.body.industry, req.body.awardSort);
   db.Contests.findAll({
     where: predicates.where,
@@ -272,3 +274,31 @@ module.exports.getContests = (req, res, next) => {
       next(new ServerError());
     })
 };
+
+module.exports.getOffersByFilter = async (req, res, next) => {
+  try{
+    const {from} = req.body;
+       const filter = {
+         where: {
+           fileName: {
+             [db.Sequelize.Op.not]: null,
+           },
+           },
+         attributes: ['fileName']
+       };
+    if (from) {
+      filter.where.createdAt = {
+        [db.Sequelize.Op.gte]: moment(from).format()
+      }
+    }
+      const result = await contestQueries.getAllOffers(filter);
+      return res.send(result);
+
+
+
+
+    }
+  catch (e) {
+    next(e);
+  }
+}
