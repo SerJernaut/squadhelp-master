@@ -41,9 +41,14 @@ module.exports = {
         allowNull: true,
         defaultValue: 'pending',
       },
+      createdAt: {
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.fn('now'),
+      }
     });
   },
-  down: (queryInterface, Sequelize) => {
+  down: (queryInterface) => {
     return queryInterface.dropTable('Offers');
   },
 };
