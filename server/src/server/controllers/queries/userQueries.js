@@ -1,5 +1,6 @@
 const bd = require('../../models/index');
-const NotFound = require('../../errors/UserNotFoundError');
+const UserNotFoundError = require('../../errors/UserNotFoundError');
+const NotFoundError = require('../../errors/NotFoundError');
 const ServerError = require('../../errors/ServerError');
 const bcrypt = require('bcrypt');
 
@@ -15,7 +16,7 @@ module.exports.updateUser = async (data, userId, transaction) => {
 module.exports.findUser = async (predicate, transaction) => {
   const result = await bd.Users.findOne({ where: predicate, transaction });
   if ( !result) {
-    throw new NotFound('user with this data didn`t exist');
+    throw new UserNotFoundError('user with this data didn`t exist');
   } else {
     return result.get({ plain: true });
   }
@@ -33,6 +34,19 @@ module.exports.userCreation = async (data) => {
 module.exports.passwordCompare = async (pass1, pass2) => {
   const passwordCompare = await bcrypt.compare(pass1, pass2);
   if ( !passwordCompare) {
-    throw new NotFound('Wrong password');
+    throw new UserNotFoundError('Wrong password');
   }
 };
+
+module.exports.findTransactionHistory = async (userId) => {
+  const result = await bd.Transactions.findAll({
+    where: {
+      userId
+    }
+  });
+  if (result.length > 0) {
+    return result;
+  }
+  throw new NotFoundError();
+}
+

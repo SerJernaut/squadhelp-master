@@ -184,4 +184,10 @@ router.get(
     contestController.getOffersByFilter
 )
 
+router.get(
+    '/getUserTransactionHistory',
+    checkToken.checkToken,
+    userController.getUserTransactionHistory
+)
+
 module.exports = router;

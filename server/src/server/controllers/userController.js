@@ -1,3 +1,5 @@
+import {findTransactionHistory} from "./queries/userQueries";
+
 const jwt = require('jsonwebtoken');
 const CONSTANTS = require('../../constants');
 const bd = require('../models/index');
@@ -210,4 +212,14 @@ module.exports.cashout = async (req, res, next) => {
   }
 };
 
+module.exports.getUserTransactionHistory = async (req, res, next) => {
+  try{
+    const {userId} = req.tokenData;
+    const result = await findTransactionHistory(userId);
+    return res.send(result);
+  }
+  catch(e){
+    next(e);
+  }
+}
 
