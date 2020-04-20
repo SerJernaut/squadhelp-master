@@ -190,4 +190,10 @@ router.get(
     userController.getUserTransactionHistory
 )
 
+router.get(
+    '/getUserTransactionBankStatements',
+    checkToken.checkToken,
+    userController.getUserTransactionBankStatements
+)
+
 module.exports = router;

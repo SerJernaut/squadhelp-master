@@ -216,6 +216,7 @@ module.exports.getUserTransactionHistory = async (req, res, next) => {
   try{
     const {userId} = req.tokenData;
     const result = await findTransactionHistory(userId);
+    console.log(result);
     return res.send(result);
   }
   catch(e){
@@ -223,3 +224,34 @@ module.exports.getUserTransactionHistory = async (req, res, next) => {
   }
 }
 
+module.exports.getUserTransactionBankStatements = async (req, res, next) => {
+  try{
+    const {userId} = req.tokenData;
+
+    const incomeFilter = {
+      where: {
+        userId,
+        typeOperation: 'INCOME'
+      },
+      raw: true,
+      attributes: [[bd.Sequelize.fn('sum', bd.Sequelize.col('sum')), 'INCOME']]
+    }
+    const getIncomeTransactions = await userQueries.findTransactionStatementsByFilter(incomeFilter);
+    const consumptionFilter = {
+      where: {
+        userId,
+        typeOperation: 'CONSUMPTION'
+      },
+      raw: true,
+      attributes: [[bd.Sequelize.fn('sum', bd.Sequelize.col('sum')), 'CONSUMPTION']]
+    }
+    const getConsumptionTransactions = await userQueries.findTransactionStatementsByFilter(consumptionFilter);
+    console.log(getIncomeTransactions)
+    const result = {...getIncomeTransactions[0], ...getConsumptionTransactions[0]};
+    console.log(getConsumptionTransactions);
+    return res.send(result);
+  }
+  catch(e) {
+    next(e)
+  }
+}

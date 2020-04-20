@@ -50,3 +50,11 @@ module.exports.findTransactionHistory = async (userId) => {
   throw new NotFoundError();
 }
 
+module.exports.findTransactionStatementsByFilter = async (filter) => {
+  const result = await bd.Transactions.findAll(filter);
+  if (result.length > 0) {
+    return result;
+  }
+  throw new NotFoundError();
+}
+
