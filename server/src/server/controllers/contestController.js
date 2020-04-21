@@ -191,7 +191,7 @@ const resolveOffer = async (
     'Someone of yours offers was rejected', contestId);
   controller.getNotificationController().emitChangeOfferStatus(creatorId,
     'Someone of your offers WIN', contestId);
-  return updatedOffers[ 0 ].dataValues;
+  return  {...updatedOffers[0].dataValues, prize: finishedContest.prize};
 };
 
 module.exports.setOfferStatus = async (req, res, next) => {
@@ -210,6 +210,11 @@ module.exports.setOfferStatus = async (req, res, next) => {
       const winningOffer = await resolveOffer(req.body.contestId,
         req.body.creatorId, req.body.orderId, req.body.offerId,
         req.body.priority, transaction);
+      await userQueries.createTransactionByFilter({
+        typeOperation: "INCOME",
+        sum: winningOffer.prize,
+        userId: winningOffer.userId,
+      });
       res.send(winningOffer);
     } catch (err) {
       transaction.rollback();

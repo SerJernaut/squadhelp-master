@@ -436,3 +436,15 @@ export const changeModalShow=(data)=>{
         data: data
     }
 };
+
+export const getUserTransactionsHistoryRequest = () => {
+    return {
+        type: ACTION.GET_USER_TRANSACTIONS_HISTORY_REQUEST
+    }
+}
+
+export const getUserTransactionStatementsRequest = () => {
+    return {
+        type: ACTION.GET_USER_TRANSACTION_STATEMENTS_REQUEST
+    }
+}

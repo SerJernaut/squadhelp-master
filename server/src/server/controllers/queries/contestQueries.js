@@ -15,7 +15,7 @@ module.exports.updateContest = async (data, predicate, transaction) => {
 
 module.exports.getAllOffers = async (filters) => {
   const offersName = await bd.Offers.findAll(filters);
-  if (offersName) {
+  if (offersName.length > 0) {
     return offersName;
   }
   throw new NotFoundError('Can not find offers');

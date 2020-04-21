@@ -43,6 +43,13 @@ export const getContestById = (data) => {
     });
 };
 
+export const getUserTransactionsHistory = () => {
+    return http.get('getUserTransactionsHistory');
+}
+
+export const getUserTransactionStatements = () => {
+    return http.get('getUserTransactionBankStatements');
+}
 
 
 

@@ -39,22 +39,31 @@ module.exports.passwordCompare = async (pass1, pass2) => {
 };
 
 module.exports.findTransactionHistory = async (userId) => {
-  const result = await bd.Transactions.findAll({
-    where: {
-      userId
-    }
-  });
-  if (result.length > 0) {
-    return result;
+  try{
+    return await bd.Transactions.findAll({
+      where: {
+        userId
+      }
+    });
   }
-  throw new NotFoundError();
+  catch (e) {
+    throw e;
+  }
 }
 
 module.exports.findTransactionStatementsByFilter = async (filter) => {
-  const result = await bd.Transactions.findAll(filter);
+  try{
+    return await bd.Transactions.findAll(filter);
+  }
+  catch (e) {
+    throw e;
+  }
+}
+
+module.exports.createTransactionByFilter = async (filter) => {
+  const result = await bd.Transactions.create(filter);
   if (result.length > 0) {
     return result;
   }
-  throw new NotFoundError();
+  throw new ServerError('can not create transaction');
 }
-

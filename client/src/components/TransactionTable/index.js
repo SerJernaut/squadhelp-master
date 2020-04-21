@@ -1,20 +1,10 @@
 import * as React from "react";
 import styles from "./TransactionTable.module.scss";
+import {connect} from "react-redux";
 
-const transactions = [
-  {
-    id: 1,
-    earnedOrSpent: "Заработал",
-    amount: "+350$",
-  },
-  {
-    id: 2,
-    earnedOrSpent: "Потратил",
-    amount: "-350$",
-  },
-];
+const TransactionTable = ({transactions, transactionStatements}) => {
+  const transactionStatementsSize = Object.keys(transactionStatements).length;
 
-const TransactionTable = (props) => {
   return (
     <div className={styles.tableContainer}>
       <table>
@@ -25,18 +15,57 @@ const TransactionTable = (props) => {
             <th>сумма</th>
           </tr>
         </thead>
-        {transactions.map((transaction) => {
+        {transactions.length > 0 && transactions.map((transaction, index) => {
           return (
             <tr>
-              <td>{`${transaction.id}`}</td>
-              <td>{`${transaction.earnedOrSpent}`}</td>
-              <td>{`${transaction.amount}`}</td>
+              <td>{`${index + 1}`}</td>
+              <td>{transaction.typeOperation === 'INCOME' ?'Заработанные' : 'Потраченные'}</td>
+              <td>{transaction.typeOperation === 'CONSUMPTION' ? `-${transaction.sum}` : `${transaction.sum}`}</td>
             </tr>
           );
         })}
+        {transactionStatementsSize > 0 && Object.entries(transactionStatements).map(transactionStatement => {
+          return (
+              <tr>
+                <td colSpan={2}>
+                  {transactionStatement[0] === 'INCOME' ? 'Всего заработано' : 'Всего потрачено'}
+                </td>
+                <td>
+                  {transactionStatement[0] === 'CONSUMPTION' ? `-${transactionStatement[1]}` : `${transactionStatement[1]}`}
+                </td>
+              </tr>
+          )
+        })}
+        {transactionStatementsSize === 0 &&
+            <>
+            <tr>
+              <td colSpan={2}>
+                Всего заработано
+              </td>
+              <td>
+                0
+              </td>
+            </tr>
+            <tr>
+              <td colSpan={2}>
+                Всего потрачено
+              </td>
+              <td>
+                0
+              </td>
+            </tr>
+            </>
+
+        }
+
+
       </table>
     </div>
   );
 };
 
-export default TransactionTable;
+const mapStateToProps = state => state.transactionsStore;
+
+
+
+export default connect(mapStateToProps)(TransactionTable);

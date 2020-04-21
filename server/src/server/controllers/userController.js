@@ -205,6 +205,9 @@ module.exports.cashout = async (req, res, next) => {
       },
       transaction);
     transaction.commit();
+    await userQueries.createTransactionByFilter({typeOperation: "CONSUMPTION",
+    sum: req.body.sum,
+    userId: updatedUser.id})
     res.send({ balance: updatedUser.balance });
   } catch (err) {
     transaction.rollback();
@@ -212,11 +215,10 @@ module.exports.cashout = async (req, res, next) => {
   }
 };
 
-module.exports.getUserTransactionHistory = async (req, res, next) => {
+module.exports.getUserTransactionsHistory = async (req, res, next) => {
   try{
     const {userId} = req.tokenData;
     const result = await findTransactionHistory(userId);
-    console.log(result);
     return res.send(result);
   }
   catch(e){
@@ -236,16 +238,25 @@ module.exports.getUserTransactionBankStatements = async (req, res, next) => {
       group: ['typeOperation'],
     };
     const getTransactionStatements = await userQueries.findTransactionStatementsByFilter(filter);
-    const prepareResult = {...getTransactionStatements};
-    prepareResult[0].INCOME = prepareResult[0].sum;
-    prepareResult[1].CONSUMPTION = prepareResult[1].sum;
-    for(let i = 0; i < 2; i++) {
-      delete prepareResult[i].sum;
-      delete prepareResult[i].typeOperation;
+    console.log(getTransactionStatements)
+    if (getTransactionStatements) {
+      const prepareResult = {...getTransactionStatements};
+      console.log(prepareResult)
+      const prepareResultSize = Object.keys(prepareResult).length;
+      for (let i = 0; i < prepareResultSize; i++) {
+        (prepareResult[i].typeOperation === 'INCOME') ?
+            prepareResult[i].INCOME = prepareResult[i].sum :
+            prepareResult[i].CONSUMPTION = prepareResult[i].sum
+        delete prepareResult[i].sum;
+        delete prepareResult[i].typeOperation;
+      }
+      const result = {...prepareResult[0], ...prepareResult[1]};
+      return res.send(result);
     }
-    const result = {...prepareResult[0], ...prepareResult[1]};
-    return res.send(result);
+
+
   } catch (e) {
     next(e);
   }
 };
+
